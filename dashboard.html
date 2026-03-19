@@ -2,7 +2,7 @@
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Prediction & World Chat Dashboard</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
@@ -17,7 +17,18 @@
             --text: #333;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Lato', sans-serif; }
-        body { background-color: var(--bg); display: flex; min-height: 100vh; }
+        body { 
+            background-color: var(--bg); 
+            display: flex; 
+            min-height: 100vh;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+        input, textarea {
+            user-select: auto !important;
+            -webkit-user-select: auto !important;
+        }
         
         /* Dashboard Layout */
         .sidebar { background: var(--sidebar); color: white; display: flex; flex-direction: column; transition: 0.3s; }
