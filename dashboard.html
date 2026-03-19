@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="ku" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no" />
     <title>Prediction & World Chat Dashboard</title>
     <script>
-      // Force zoom prevention via JS
-      document.addEventListener('touchstart', (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
-      let dashLastTouch = 0;
-      document.addEventListener('touchend', (e) => {
-        const now = Date.now();
-        if (now - dashLastTouch <= 300) e.preventDefault();
-        dashLastTouch = now;
-      }, false);
+        // Force zoom prevention via JS
+        document.addEventListener('touchstart', (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
+        let dashLastTouch = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - dashLastTouch <= 300) e.preventDefault();
+            dashLastTouch = now;
+        }, false);
     </script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
@@ -26,37 +28,105 @@
             --white: #ffffff;
             --text: #333;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Lato', sans-serif; }
-        body { 
-            background-color: var(--bg); 
-            display: flex; 
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Lato', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            display: flex;
             min-height: 100vh;
             user-select: none;
             -webkit-user-select: none;
             touch-action: manipulation;
         }
-        input, textarea {
+
+        input,
+        textarea {
             user-select: auto !important;
             -webkit-user-select: auto !important;
         }
-        
+
         /* Dashboard Layout */
-        .sidebar { background: var(--sidebar); color: white; display: flex; flex-direction: column; transition: 0.3s; }
-        .sidebar h2 { margin-bottom: 30px; text-align: center; font-size: 1.5rem; color: #f6ebe7; padding: 20px 0; }
-        .nav-item { padding: 12px 15px; margin-bottom: 10px; border-radius: 8px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px; }
-        .nav-item:hover, .nav-item.active { background: var(--accent); }
-        .logout-btn { margin-top: auto; background: #c0392b !important; }
-        .main-content { flex: 1; overflow-y: auto; padding-bottom: 80px; }
+        .sidebar {
+            background: var(--sidebar);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            transition: 0.3s;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1.5rem;
+            color: #f6ebe7;
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: var(--accent);
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            background: #c0392b !important;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 80px;
+        }
 
         /* Sections */
-        .section { display: none; padding: 20px; animation: fadeIn 0.4s ease; }
-        .section.active { display: block; }
-        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h3 { margin-bottom: 20px; color: var(--sidebar); border-bottom: 2px solid var(--bg); padding-bottom: 10px; }
+        .section {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            margin-bottom: 20px;
+            color: var(--sidebar);
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 10px;
+        }
 
         /* Mobile Styles (Phone) */
         @media (max-width: 768px) {
-            body { flex-direction: column; }
+            body {
+                flex-direction: column;
+            }
+
             .sidebar {
                 width: 94%;
                 flex-direction: row;
@@ -71,86 +141,132 @@
                 background: rgba(47, 21, 12, 0.95);
                 backdrop-filter: blur(10px);
                 border-radius: 25px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-                border: 1px solid rgba(255,255,255,0.1);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                border: 1px solid rgba(255, 255, 255, 0.1);
             }
-            .sidebar h2 { display: none; }
-            .nav-item { 
-                margin-bottom: 0; 
-                padding: 5px; 
-                flex-direction: column; 
-                font-size: 0.7rem; 
-                gap: 2px; 
-                flex: 1; 
-                text-align: center; 
-                color: rgba(255,255,255,0.6);
+
+            .sidebar-header {
+                display: none;
             }
-            .nav-item.active { 
-                background: transparent; 
+
+            .nav-item {
+                margin-bottom: 0;
+                padding: 5px;
+                flex-direction: column;
+                font-size: 0.7rem;
+                gap: 2px;
+                flex: 1;
+                text-align: center;
+                color: rgba(255, 255, 255, 0.6);
+            }
+
+            .nav-item.active {
+                background: transparent;
                 color: #fff;
             }
-            .nav-item i { font-size: 1.4rem; transition: 0.3s; }
-            .nav-item.active i { transform: translateY(-3px); }
-            .main-content { padding: 15px; padding-bottom: 110px; }
-            .logout-btn { margin-top: 0; background: transparent !important; color: #ff7675; }
+
+            .nav-item i {
+                font-size: 1.4rem;
+                transition: 0.3s;
+            }
+
+            .nav-item.active i {
+                transform: translateY(-3px);
+            }
+
+            .main-content {
+                padding: 15px;
+                padding-bottom: 110px;
+            }
+
+            .logout-btn {
+                margin-top: 0;
+                background: transparent !important;
+                color: #ff7675;
+            }
         }
-        @media (min-width: 769px) { .sidebar { width: 260px; height: 100vh; position: sticky; top: 0; } .main-content { padding: 30px; } }
+
+        @media (min-width: 769px) {
+            .sidebar {
+                width: 260px;
+                height: 100vh;
+                position: sticky;
+                top: 0;
+            }
+
+            .main-content {
+                padding: 30px;
+            }
+        }
 
         /* Improved Chat UI */
-        #chat { padding: 0; }
-        #chatBox { 
-            height: calc(100vh - 160px); 
-            overflow-y: auto; 
-            background: #f1f2f6; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
+        #chat {
+            padding: 0;
+        }
+
+        #chatBox {
+            height: calc(100vh - 160px);
+            overflow-y: auto;
+            background: #f1f2f6;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
             gap: 15px;
             border-top: 1px solid #ddd;
         }
-        .msg { 
-            padding: 12px 18px; 
-            border-radius: 20px; 
-            max-width: 75%; 
-            position: relative; 
-            font-size: 0.95rem; 
+
+        .msg {
+            padding: 12px 18px;
+            border-radius: 20px;
+            max-width: 75%;
+            position: relative;
+            font-size: 0.95rem;
             line-height: 1.4;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
-        .msg-me { 
-            background: var(--accent); 
-            color: white; 
+
+        .msg-me {
+            background: var(--accent);
+            color: white;
             border-bottom-right-radius: 2px;
         }
-        .msg-other { 
-            background: #e9e9eb; 
-            color: var(--text); 
-            border-bottom-left-radius: 2px; 
+
+        .msg-other {
+            background: #e9e9eb;
+            color: var(--text);
+            border-bottom-left-radius: 2px;
         }
-        .msg-user { 
-            font-size: 0.7rem; 
-            font-weight: 800; 
-            display: block; 
-            margin-bottom: 5px; 
+
+        .msg-user {
+            font-size: 0.7rem;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 5px;
             text-transform: uppercase;
             opacity: 0.8;
             color: #777;
         }
-        .msg-me .msg-user { color: white; }
-        .chat-input-area { 
-            display: flex; 
-            gap: 10px; 
-            padding: 15px; 
-            background: white; 
+
+        .msg-me .msg-user {
+            color: white;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background: white;
             border-top: 1px solid #eee;
             position: sticky;
             bottom: 0;
         }
+
         .chat-input-area input {
             border-radius: 25px;
             padding-inline: 20px;
             background: #f8f9fa;
         }
+
         .send-btn {
             border-radius: 50%;
             width: 45px;
@@ -159,30 +275,76 @@
             align-items: center;
             justify-content: center;
             padding: 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
             transition: 0.2s;
         }
+
         .send-btn:active {
             transform: scale(0.9);
         }
+
         @media (max-width: 768px) {
-            #chatBox { height: calc(100vh - 150px); }
-            .chat-input-area { bottom: 70px; }
+            #chatBox {
+                height: calc(100vh - 150px);
+            }
+
+            .chat-input-area {
+                bottom: 70px;
+            }
         }
 
         /* Forms */
-        .input-group { margin-bottom: 15px; }
-        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; }
-        .btn { background: var(--accent); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn:hover { background: var(--sidebar); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--sidebar);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
+
 <body>
 
     <div class="sidebar">
-        <h2>Prediction App</h2>
-        <div class="nav-item active" onclick="showSection('predictions')"><i class="fas fa-chart-line"></i> پێشبینی</div>
+        <div class="sidebar-header" style="text-align: center; padding: 20px 0;">
+            <img src="logo.png" alt="Logo"
+                style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.2); object-fit: cover;">
+            <h2 style="margin-top: 10px; margin-bottom: 0; font-size: 1.2rem;">Prediction App</h2>
+        </div>
+        <div class="nav-item active" onclick="showSection('predictions')"><i class="fas fa-chart-line"></i> پێشبینی
+        </div>
         <div class="nav-item" onclick="showSection('chat')"><i class="fas fa-comments"></i> جیهانا چاتێ</div>
         <div class="nav-item" onclick="showSection('profile')"><i class="fas fa-user"></i> پرۆفایل</div>
     </div>
@@ -193,25 +355,31 @@
             <div class="card">
                 <h3><i class="fas fa-plus-circle"></i> پێشبینییا نوو پۆست بکە</h3>
                 <form id="predictionForm">
-                    <input type="text" id="matchName" placeholder="یاری: ریال مەدرید - بەرشەلۆنە" required style="margin-bottom: 10px;">
-                    <input type="text" id="predictedScore" placeholder="ئەنجام: 2 - 1" required style="margin-bottom: 10px;">
+                    <input type="text" id="matchName" placeholder="یاری: ریال مەدرید - بەرشەلۆنە" required
+                        style="margin-bottom: 10px;">
+                    <input type="text" id="predictedScore" placeholder="ئەنجام: 2 - 1" required
+                        style="margin-bottom: 10px;">
                     <button type="submit" class="btn">بلاڤ بکە</button>
                 </form>
             </div>
-            <div id="predictionList"><h3>هەموو پێشبینی</h3><p style="color:grey">ل هیڤیێ بن...</p></div>
+            <div id="predictionList">
+                <h3>هەموو پێشبینی</h3>
+                <p style="color:grey">ل هیڤیێ بن...</p>
+            </div>
         </div>
 
         <!-- World Chat -->
         <div id="chat" class="section">
-            <div style="background: white; padding: 15px 25px; border-bottom: 2px solid var(--bg); display: flex; align-items: center; gap: 10px;">
+            <div
+                style="background: white; padding: 15px 25px; border-bottom: 2px solid var(--bg); display: flex; align-items: center; gap: 10px;">
                 <i class="fas fa-globe" style="color: var(--accent); font-size: 1.2rem;"></i>
                 <h3 style="margin-bottom: 0; border: none;">چاتا جیهانی (World Chat)</h3>
             </div>
             <div id="chatBox"></div>
-                <form id="chatForm" class="chat-input-area">
-                    <input type="text" id="chatInput" placeholder="نامەیەکێ بنووسە..." required autocomplete="off">
-                    <button type="submit" class="btn send-btn"><i class="fas fa-paper-plane"></i></button>
-                </form>
+            <form id="chatForm" class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="نامەیەکێ بنووسە..." required autocomplete="off">
+                <button type="submit" class="btn send-btn"><i class="fas fa-paper-plane"></i></button>
+            </form>
         </div>
 
         <!-- Profile -->
@@ -224,7 +392,8 @@
             </div>
             <div class="card">
                 <h3>گوهۆڕینا وشەی نهێنی</h3>
-                <button id="changePassBtn" class="btn" style="background: var(--sidebar); margin-bottom: 20px;">ناردنا لینکا گوهۆڕینێ</button>
+                <button id="changePassBtn" class="btn" style="background: var(--sidebar); margin-bottom: 20px;">ناردنا
+                    لینکا گوهۆڕینێ</button>
                 <hr style="opacity: 0.1; margin-bottom: 20px;">
                 <button id="logoutBtn" class="btn" style="background-color: #c0392b;">چوونەدەر (Log Out)</button>
             </div>
@@ -354,4 +523,5 @@
         document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
     </script>
 </body>
+
 </html>
