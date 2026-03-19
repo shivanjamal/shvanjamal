@@ -151,6 +151,20 @@
             padding-inline: 20px;
             background: #f8f9fa;
         }
+        .send-btn {
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transition: 0.2s;
+        }
+        .send-btn:active {
+            transform: scale(0.9);
+        }
         @media (max-width: 768px) {
             #chatBox { height: calc(100vh - 150px); }
             .chat-input-area { bottom: 70px; }
@@ -171,7 +185,6 @@
         <div class="nav-item active" onclick="showSection('predictions')"><i class="fas fa-chart-line"></i> پێشبینی</div>
         <div class="nav-item" onclick="showSection('chat')"><i class="fas fa-comments"></i> جیهانا چاتێ</div>
         <div class="nav-item" onclick="showSection('profile')"><i class="fas fa-user"></i> پرۆفایل</div>
-        <div class="nav-item logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> دەرکەفتن</div>
     </div>
 
     <div class="main-content">
@@ -195,10 +208,10 @@
                 <h3 style="margin-bottom: 0; border: none;">چاتا جیهانی (World Chat)</h3>
             </div>
             <div id="chatBox"></div>
-            <form id="chatForm" class="chat-input-area">
-                <input type="text" id="chatInput" placeholder="نامەیەکێ بنووسە..." required autocomplete="off">
-                <button type="submit" class="btn" style="border-radius: 50%; width: 45px; height: 45px; padding: 0;"><i class="fas fa-paper-plane"></i></button>
-            </form>
+                <form id="chatForm" class="chat-input-area">
+                    <input type="text" id="chatInput" placeholder="نامەیەکێ بنووسە..." required autocomplete="off">
+                    <button type="submit" class="btn send-btn"><i class="fas fa-paper-plane"></i></button>
+                </form>
         </div>
 
         <!-- Profile -->
@@ -211,7 +224,9 @@
             </div>
             <div class="card">
                 <h3>گوهۆڕینا وشەی نهێنی</h3>
-                <button id="changePassBtn" class="btn" style="background: var(--sidebar);">ناردنا لینکا گوهۆڕینێ</button>
+                <button id="changePassBtn" class="btn" style="background: var(--sidebar); margin-bottom: 20px;">ناردنا لینکا گوهۆڕینێ</button>
+                <hr style="opacity: 0.1; margin-bottom: 20px;">
+                <button id="logoutBtn" class="btn" style="background-color: #c0392b;">چوونەدەر (Log Out)</button>
             </div>
         </div>
     </div>
