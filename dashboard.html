@@ -172,7 +172,7 @@
             if (user) {
                 document.getElementById('profileEmail').value = user.email;
                 document.getElementById('profileDisplayName').value = user.displayName || "";
-                loadPredictions(user.uid);
+                loadPredictions(); // گشتگیر هاتە کرن بۆ هەموو مروڤان
             } else {
                 window.location.href = "index.html";
             }
@@ -193,31 +193,33 @@
                 .catch(err => alert(err.message));
         });
 
-        // Prediction Logic
+        // Prediction Logic (SAVE)
         const predictionForm = document.getElementById('predictionForm');
         predictionForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const match = document.getElementById('matchName').value;
             const score = document.getElementById('predictedScore').value;
+            const userName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
 
             try {
                 await addDoc(collection(db, "predictions"), {
                     userId: auth.currentUser.uid,
+                    userName: userName,
                     match: match,
                     score: score,
                     date: new Date().toISOString()
                 });
-                alert("پێشبینی هاتە پاشکەفتکرن!");
+                alert("پشتبینی هاتە پاشکەفتکرن!");
                 predictionForm.reset();
-                loadPredictions(auth.currentUser.uid);
+                loadPredictions();
             } catch (error) {
                 alert("کێشەیەک ل داتا بەیسێ هەیە: " + error.message);
             }
         });
 
-        // Load Predictions
-        async function loadPredictions(userId) {
-            const q = query(collection(db, "predictions"), where("userId", "==", userId));
+        // Load Predictions (FETCH ALL & STYLE)
+        async function loadPredictions() {
+            const q = query(collection(db, "predictions")); // Query ALL users
             const querySnapshot = await getDocs(q);
             const list = document.getElementById('predictionList');
             list.innerHTML = "";
@@ -229,9 +231,20 @@
 
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
+                const postDate = new Date(data.date).toLocaleDateString();
+                
                 list.innerHTML += `
-                    <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
-                        <strong>${data.match}</strong>: <span style="color: var(--accent); font-weight: bold;">${data.score}</span>
+                    <div style="background: var(--bg); border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 8px;">
+                            <span style="font-weight: bold; color: var(--accent);"><i class="fas fa-user-circle"></i> ${data.userName}</span>
+                            <span style="font-size: 0.75rem; color: grey;">${postDate}</span>
+                        </div>
+                        <div style="font-size: 1.1rem; color: var(--sidebar); font-weight: 700;">
+                            ${data.match}
+                        </div>
+                        <div style="background: white; display: inline-block; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 1.2rem; color: var(--accent); width: fit-content; border: 2px solid var(--accent);">
+                            ${data.score}
+                        </div>
                     </div>
                 `;
             });
