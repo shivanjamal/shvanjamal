@@ -2,8 +2,18 @@
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no" />
     <title>Prediction & World Chat Dashboard</title>
+    <script>
+      // Force zoom prevention via JS
+      document.addEventListener('touchstart', (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
+      let dashLastTouch = 0;
+      document.addEventListener('touchend', (e) => {
+        const now = Date.now();
+        if (now - dashLastTouch <= 300) e.preventDefault();
+        dashLastTouch = now;
+      }, false);
+    </script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
     <!-- Google Font -->
