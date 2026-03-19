@@ -96,13 +96,66 @@
         }
         @media (min-width: 769px) { .sidebar { width: 260px; height: 100vh; position: sticky; top: 0; } .main-content { padding: 30px; } }
 
-        /* Chat UI */
-        #chatBox { height: calc(100vh - 250px); overflow-y: auto; background: #eee; border-radius: 15px; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 10px 15px; border-radius: 12px; max-width: 80%; word-wrap: break-word; font-size: 0.95rem; }
-        .msg-me { align-self: flex-start; background: var(--accent); color: white; border-bottom-left-radius: 0; }
-        .msg-other { align-self: flex-end; background: white; color: var(--text); border-bottom-right-radius: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .msg-user { font-size: 0.7rem; font-weight: bold; display: block; margin-bottom: 4px; opacity: 0.8; }
-        .chat-input-area { display: flex; gap: 10px; margin-top: 15px; }
+        /* Improved Chat UI */
+        #chat { padding: 0; }
+        #chatBox { 
+            height: calc(100vh - 160px); 
+            overflow-y: auto; 
+            background: #f1f2f6; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px;
+            border-top: 1px solid #ddd;
+        }
+        .msg { 
+            padding: 12px 18px; 
+            border-radius: 20px; 
+            max-width: 75%; 
+            position: relative; 
+            font-size: 0.95rem; 
+            line-height: 1.4;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .msg-me { 
+            align-self: flex-start; 
+            background: var(--accent); 
+            color: white; 
+            border-bottom-left-radius: 2px;
+        }
+        .msg-other { 
+            align-self: flex-end; 
+            background: white; 
+            color: var(--text); 
+            border-bottom-right-radius: 2px; 
+            border: 1px solid #e0e0e0;
+        }
+        .msg-user { 
+            font-size: 0.75rem; 
+            font-weight: 800; 
+            display: block; 
+            margin-bottom: 5px; 
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+        .chat-input-area { 
+            display: flex; 
+            gap: 10px; 
+            padding: 15px; 
+            background: white; 
+            border-top: 1px solid #eee;
+            position: sticky;
+            bottom: 0;
+        }
+        .chat-input-area input {
+            border-radius: 25px;
+            padding-inline: 20px;
+            background: #f8f9fa;
+        }
+        @media (max-width: 768px) {
+            #chatBox { height: calc(100vh - 150px); }
+            .chat-input-area { bottom: 70px; }
+        }
 
         /* Forms */
         .input-group { margin-bottom: 15px; }
@@ -138,14 +191,15 @@
 
         <!-- World Chat -->
         <div id="chat" class="section">
-            <div class="card" style="height: 100%;">
-                <h3><i class="fas fa-globe"></i> چاتا جیهانی (World Chat)</h3>
-                <div id="chatBox"></div>
-                <form id="chatForm" class="chat-input-area">
-                    <input type="text" id="chatInput" placeholder="نامەیەکێ بنووسە..." required autocomplete="off">
-                    <button type="submit" class="btn"><i class="fas fa-paper-plane"></i></button>
-                </form>
+            <div style="background: white; padding: 15px 25px; border-bottom: 2px solid var(--bg); display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-globe" style="color: var(--accent); font-size: 1.2rem;"></i>
+                <h3 style="margin-bottom: 0; border: none;">چاتا جیهانی (World Chat)</h3>
             </div>
+            <div id="chatBox"></div>
+            <form id="chatForm" class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="نامەیەکێ بنووسە..." required autocomplete="off">
+                <button type="submit" class="btn" style="border-radius: 50%; width: 45px; height: 45px; padding: 0;"><i class="fas fa-paper-plane"></i></button>
+            </form>
         </div>
 
         <!-- Profile -->
