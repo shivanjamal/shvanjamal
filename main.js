@@ -18,28 +18,12 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider(); // Google Provider
 
-// --- Handle Login State (Real-time) ---
+// --- Handle Login State (Redirect to Dashboard) ---
 onAuthStateChanged(auth, (user) => {
-    const imagePanel = document.querySelector('.image-panel');
-    const formPanel = document.querySelector('.form-panel');
-    const dashboard = document.getElementById('userDashboard');
-    const welcomeMsg = document.getElementById('userWelcomeMsg');
-
     if (user) {
-        imagePanel.style.display = 'none';
-        formPanel.style.display = 'none';
-        dashboard.style.display = 'flex';
-        welcomeMsg.innerText = "Welcome! Logged in as: " + user.email;
-    } else {
-        imagePanel.style.display = 'block';
-        formPanel.style.display = 'block';
-        dashboard.style.display = 'none';
+        // ئەگەر چووبیتە ژوورێ، دێ تە بەتە Dashboard
+        window.location.href = "dashboard.html";
     }
-});
-
-// Logout Action
-document.getElementById('logoutBtn').addEventListener('click', () => {
-    signOut(auth).then(() => alert("Logged out."));
 });
 
 // Google Login Logic

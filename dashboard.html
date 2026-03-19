@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | ئەپێ من</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #f6ebe7;
+        }
+        .dashboard-container {
+            width: min(90%, 40rem);
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-top: 5rem;
+        }
+        .user-info i {
+            font-size: 5rem;
+            color: #8b351c;
+            margin-bottom: 1.5rem;
+        }
+        .user-info h2 {
+            margin-bottom: 1rem;
+            color: #2f150c;
+        }
+        .user-info p {
+            font-size: 1.1rem;
+            color: #8b351c;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container" style="margin: 5rem auto;">
+        <div class="user-info">
+            <i class="fas fa-user-circle"></i>
+            <h2>ب خێر بێی بۆ Dashboard!</h2>
+            <p id="userEmail">چاوەڕێ بکە...</p>
+            
+            <button id="logoutBtn" class="submit-btn" style="background-color: #2f150c; border: none; padding: 10px 30px; border-radius: 20px; color: white; cursor: pointer;">
+                چوونەدەر (Logout)
+            </button>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts for Dashboard -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // Firebase Config (هەمان کلیلێن تە)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBoCQo1yrieelrzAkIzNgegkv0w0sQvjho",
+            authDomain: "mypredictionapp-f23e4.firebaseapp.com",
+            projectId: "mypredictionapp-f23e4",
+            storageBucket: "mypredictionapp-f23e4.firebasestorage.app",
+            messagingSenderId: "821118473868",
+            appId: "1:821118473868:web:00f4e5b7f0895cf7fb8da9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // پاشکەوتکرنا حالەتێ چوونەژوورێ
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('userEmail').innerText = "تە ب ڤێ ئیمەیڵێ داهاتیە ژوورێ: " + user.email;
+            } else {
+                // ئەگەر کەس نەچووبیتە ژوورێ، دێ زڤڕینە سەر لاپەڕا سەرەکی
+                window.location.href = "index.html";
+            }
+        });
+
+        // چوونەدەرێ
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = "index.html";
+            });
+        });
+    </script>
+</body>
+</html>
