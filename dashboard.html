@@ -3,61 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | ئەپێ من</title>
+    <title>Prediction Dashboard</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            background-color: #f6ebe7;
+        :root {
+            --bg: #f8f9fa;
+            --sidebar: #2f150c;
+            --accent: #8b351c;
+            --white: #ffffff;
+            --text: #333;
         }
-        .dashboard-container {
-            width: min(90%, 40rem);
-            background: white;
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
-            margin-top: 5rem;
-        }
-        .user-info i {
-            font-size: 5rem;
-            color: #8b351c;
-            margin-bottom: 1.5rem;
-        }
-        .user-info h2 {
-            margin-bottom: 1rem;
-            color: #2f150c;
-        }
-        .user-info p {
-            font-size: 1.1rem;
-            color: #8b351c;
-            margin-bottom: 2rem;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Lato', sans-serif; }
+        body { background-color: var(--bg); display: flex; min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar { width: 260px; background: var(--sidebar); color: white; padding: 20px; display: flex; flex-direction: column; }
+        .sidebar h2 { margin-bottom: 30px; text-align: center; font-size: 1.5rem; color: #f6ebe7; }
+        .nav-item { padding: 12px 15px; margin-bottom: 10px; border-radius: 8px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px; }
+        .nav-item:hover, .nav-item.active { background: var(--accent); }
+        .logout-btn { margin-top: auto; background: #c0392b; }
+
+        /* Main Content */
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
+        .section { display: none; animation: fadeIn 0.4s ease; }
+        .section.active { display: block; }
+        
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        h3 { margin-bottom: 20px; color: var(--sidebar); border-bottom: 2px solid var(--bg); padding-bottom: 10px; }
+
+        /* Forms */
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--accent); }
+        .btn { background: var(--accent); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn:hover { background: var(--sidebar); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-container" style="margin: 5rem auto;">
-        <div class="user-info">
-            <i class="fas fa-user-circle"></i>
-            <h2>ب خێر بێی بۆ Dashboard!</h2>
-            <p id="userEmail">چاوەڕێ بکە...</p>
-            
-            <button id="logoutBtn" class="submit-btn" style="background-color: #2f150c; border: none; padding: 10px 30px; border-radius: 20px; color: white; cursor: pointer;">
-                چوونەدەر (Logout)
-            </button>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>My Prediction</h2>
+        <div class="nav-item active" onclick="showSection('predictions')">
+            <i class="fas fa-chart-line"></i> پێشبینیێن من
+        </div>
+        <div class="nav-item" onclick="showSection('profile')">
+            <i class="fas fa-user"></i> پرۆفایلا کەسی
+        </div>
+        <div class="nav-item logout-btn" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i> چوونەدەر
         </div>
     </div>
 
-    <!-- Firebase Scripts for Dashboard -->
+    <!-- Main Content -->
+    <div class="main-content">
+        
+        <!-- Prediction Section -->
+        <div id="predictions" class="section active">
+            <div class="card">
+                <h3><i class="fas fa-plus-circle"></i> پێشبینییەکا نوو زیاد بکە</h3>
+                <form id="predictionForm">
+                    <div class="input-group">
+                        <label>ناڤێ یاریێ (Match Name)</label>
+                        <input type="text" id="matchName" placeholder="نموونە: ریال مەدرید - بەرشەلۆنە" required>
+                    </div>
+                    <div class="input-group">
+                        <label>ئەنجامێ تو پێشبینی دکەی</label>
+                        <input type="text" id="predictedScore" placeholder="نموونە: 2 - 1" required>
+                    </div>
+                    <button type="submit" class="btn">زیاد بکە</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>پێشبینیێن تە یێن بەرێ</h3>
+                <div id="predictionList">
+                    <p style="color: grey;">چ پێشبینی نینن...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="profile" class="section">
+            <div class="card">
+                <h3><i class="fas fa-id-card"></i> زانیاریێن پرۆفایلێ</h3>
+                <div class="input-group">
+                    <label>ئیمەیڵ</label>
+                    <input type="text" id="profileEmail" disabled>
+                </div>
+                <div class="input-group">
+                    <label>ناڤێ تە (Full Name)</label>
+                    <input type="text" id="profileDisplayName" placeholder="ناڤێ خۆ بنووسە">
+                </div>
+                <button id="saveProfileBtn" class="btn">بگەهینە (Save)</button>
+            </div>
+
+            <div class="card">
+                <h3>گوهۆڕینا پەیڤا نهێنی (Password)</h3>
+                <p style="margin-bottom: 10px; font-size: 0.9rem;">بۆ گوهۆڕینا وشەی نهێنی، لینکەک دێ بۆ ئیمەیڵا تە هێتە ناردن.</p>
+                <button id="changePassBtn" class="btn" style="background: var(--sidebar);">ناردنا لینکا گوهۆڕینێ</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Firebase Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs, timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Firebase Config (هەمان کلیلێن تە)
         const firebaseConfig = {
             apiKey: "AIzaSyBoCQo1yrieelrzAkIzNgegkv0w0sQvjho",
             authDomain: "mypredictionapp-f23e4.firebaseapp.com",
@@ -69,23 +130,91 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        // پاشکەوتکرنا حالەتێ چوونەژوورێ
+        // Sidebar Navigation
+        window.showSection = (sectionId) => {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        };
+
+        // Auth State Check
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                document.getElementById('userEmail').innerText = "تە ب ڤێ ئیمەیڵێ داهاتیە ژوورێ: " + user.email;
+                document.getElementById('profileEmail').value = user.email;
+                document.getElementById('profileDisplayName').value = user.displayName || "";
+                loadPredictions(user.uid);
             } else {
-                // ئەگەر کەس نەچووبیتە ژوورێ، دێ زڤڕینە سەر لاپەڕا سەرەکی
                 window.location.href = "index.html";
             }
         });
 
-        // چوونەدەرێ
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.location.href = "index.html";
-            });
+        // Save Profile
+        document.getElementById('saveProfileBtn').addEventListener('click', () => {
+            const name = document.getElementById('profileDisplayName').value;
+            updateProfile(auth.currentUser, { displayName: name })
+                .then(() => alert("پرۆفایل هاتە نووژەنکرن!"))
+                .catch(err => alert(err.message));
         });
+
+        // Change Password
+        document.getElementById('changePassBtn').addEventListener('click', () => {
+            sendPasswordResetEmail(auth, auth.currentUser.email)
+                .then(() => alert("لینکا گوهۆڕینێ بۆ ئیمەیڵا تە هاتە ناردن."))
+                .catch(err => alert(err.message));
+        });
+
+        // Prediction Logic
+        const predictionForm = document.getElementById('predictionForm');
+        predictionForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const match = document.getElementById('matchName').value;
+            const score = document.getElementById('predictedScore').value;
+
+            try {
+                await addDoc(collection(db, "predictions"), {
+                    userId: auth.currentUser.uid,
+                    match: match,
+                    score: score,
+                    date: new Date().toISOString()
+                });
+                alert("پێشبینی هاتە پاشکەفتکرن!");
+                predictionForm.reset();
+                loadPredictions(auth.currentUser.uid);
+            } catch (error) {
+                alert("کێشەیەک ل داتا بەیسێ هەیە: " + error.message);
+            }
+        });
+
+        // Load Predictions
+        async function loadPredictions(userId) {
+            const q = query(collection(db, "predictions"), where("userId", "==", userId));
+            const querySnapshot = await getDocs(q);
+            const list = document.getElementById('predictionList');
+            list.innerHTML = "";
+            
+            if (querySnapshot.empty) {
+                list.innerHTML = "<p style='color: grey;'>چ پێشبینی نینن...</p>";
+                return;
+            }
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                list.innerHTML += `
+                    <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
+                        <strong>${data.match}</strong>: <span style="color: var(--accent); font-weight: bold;">${data.score}</span>
+                    </div>
+                `;
+            });
+        }
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).then(() => window.location.href = "index.html");
+        });
+
     </script>
 </body>
 </html>
