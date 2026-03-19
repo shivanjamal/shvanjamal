@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prediction Dashboard</title>
+    <title>Prediction & World Chat Dashboard</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
     <!-- Google Font -->
@@ -19,132 +19,103 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Lato', sans-serif; }
         body { background-color: var(--bg); display: flex; min-height: 100vh; }
         
-        /* Common Dashboard Styles */
+        /* Dashboard Layout */
         .sidebar { background: var(--sidebar); color: white; display: flex; flex-direction: column; transition: 0.3s; }
         .sidebar h2 { margin-bottom: 30px; text-align: center; font-size: 1.5rem; color: #f6ebe7; padding: 20px 0; }
         .nav-item { padding: 12px 15px; margin-bottom: 10px; border-radius: 8px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px; }
         .nav-item:hover, .nav-item.active { background: var(--accent); }
         .logout-btn { margin-top: auto; background: #c0392b !important; }
-        .main-content { flex: 1; overflow-y: auto; }
+        .main-content { flex: 1; overflow-y: auto; padding-bottom: 80px; }
 
-        /* Mobile Styles (Phone) */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar {
-                width: 100%;
-                flex-direction: row;
-                height: 60px;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                padding: 5px;
-                z-index: 1000;
-                justify-content: space-around;
-            }
-            .sidebar h2 { display: none; }
-            .nav-item { margin-bottom: 0; padding: 10px; flex-direction: column; font-size: 0.7rem; gap: 2px; flex: 1; text-align: center; }
-            .nav-item i { font-size: 1.2rem; }
-            .main-content { padding: 15px; padding-bottom: 80px; }
-            .logout-btn { margin-top: 0; }
-        }
-
-        /* Desktop Styles */
-        @media (min-width: 769px) {
-            .sidebar { width: 260px; height: 100vh; position: sticky; top: 0; }
-            .main-content { padding: 30px; }
-        }
-
-        .section { display: none; animation: fadeIn 0.4s ease; }
+        /* Sections */
+        .section { display: none; padding: 20px; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
-        
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h3 { margin-bottom: 20px; color: var(--sidebar); border-bottom: 2px solid var(--bg); padding-bottom: 10px; }
 
+        /* Responsive Navbar */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; flex-direction: row; height: 65px; position: fixed; bottom: 0; padding: 5px; z-index: 1000; justify-content: space-around; }
+            .sidebar h2 { display: none; }
+            .nav-item { margin-bottom: 0; padding: 10px; flex-direction: column; font-size: 0.7rem; gap: 2px; flex: 1; text-align: center; }
+            .nav-item i { font-size: 1.2rem; }
+            .logout-btn { margin-top: 0; }
+            .main-content { padding-bottom: 100px; }
+        }
+        @media (min-width: 769px) { .sidebar { width: 260px; height: 100vh; position: sticky; top: 0; } .main-content { padding: 30px; } }
+
+        /* Chat UI */
+        #chatBox { height: calc(100vh - 250px); overflow-y: auto; background: #eee; border-radius: 15px; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 10px 15px; border-radius: 12px; max-width: 80%; word-wrap: break-word; font-size: 0.95rem; }
+        .msg-me { align-self: flex-start; background: var(--accent); color: white; border-bottom-left-radius: 0; }
+        .msg-other { align-self: flex-end; background: white; color: var(--text); border-bottom-right-radius: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .msg-user { font-size: 0.7rem; font-weight: bold; display: block; margin-bottom: 4px; opacity: 0.8; }
+        .chat-input-area { display: flex; gap: 10px; margin-top: 15px; }
+
         /* Forms */
         .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--accent); }
-        .btn { background: var(--accent); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; }
+        .btn { background: var(--accent); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .btn:hover { background: var(--sidebar); }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar -->
     <div class="sidebar">
-        <h2>My Prediction</h2>
-        <div class="nav-item active" onclick="showSection('predictions')">
-            <i class="fas fa-chart-line"></i> پێشبینیێن من
-        </div>
-        <div class="nav-item" onclick="showSection('profile')">
-            <i class="fas fa-user"></i> پرۆفایلا کەسی
-        </div>
-        <div class="nav-item logout-btn" id="logoutBtn">
-            <i class="fas fa-sign-out-alt"></i> چوونەدەر
-        </div>
+        <h2>Prediction App</h2>
+        <div class="nav-item active" onclick="showSection('predictions')"><i class="fas fa-chart-line"></i> پێشبینی</div>
+        <div class="nav-item" onclick="showSection('chat')"><i class="fas fa-comments"></i> جیهانا چاتێ</div>
+        <div class="nav-item" onclick="showSection('profile')"><i class="fas fa-user"></i> پرۆفایل</div>
+        <div class="nav-item logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> دەرکەفتن</div>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
-        
-        <!-- Prediction Section -->
+        <!-- Predictions -->
         <div id="predictions" class="section active">
             <div class="card">
-                <h3><i class="fas fa-plus-circle"></i> پێشبینییەکا نوو زیاد بکە</h3>
+                <h3><i class="fas fa-plus-circle"></i> پێشبینییا نوو پۆست بکە</h3>
                 <form id="predictionForm">
-                    <div class="input-group">
-                        <label>ناڤێ یاریێ (Match Name)</label>
-                        <input type="text" id="matchName" placeholder="نموونە: ریال مەدرید - بەرشەلۆنە" required>
-                    </div>
-                    <div class="input-group">
-                        <label>ئەنجامێ تو پێشبینی دکەی</label>
-                        <input type="text" id="predictedScore" placeholder="نموونە: 2 - 1" required>
-                    </div>
-                    <button type="submit" class="btn">زیاد بکە</button>
+                    <input type="text" id="matchName" placeholder="یاری: ریال مەدرید - بەرشەلۆنە" required style="margin-bottom: 10px;">
+                    <input type="text" id="predictedScore" placeholder="ئەنجام: 2 - 1" required style="margin-bottom: 10px;">
+                    <button type="submit" class="btn">بلاڤ بکە</button>
                 </form>
             </div>
+            <div id="predictionList"><h3>هەموو پێشبینی</h3><p style="color:grey">ل هیڤیێ بن...</p></div>
+        </div>
 
-            <div class="card">
-                <h3>پێشبینیێن تە یێن بەرێ</h3>
-                <div id="predictionList">
-                    <p style="color: grey;">چ پێشبینی نینن...</p>
-                </div>
+        <!-- World Chat -->
+        <div id="chat" class="section">
+            <div class="card" style="height: 100%;">
+                <h3><i class="fas fa-globe"></i> چاتا جیهانی (World Chat)</h3>
+                <div id="chatBox"></div>
+                <form id="chatForm" class="chat-input-area">
+                    <input type="text" id="chatInput" placeholder="نامەیەکێ بنووسە..." required autocomplete="off">
+                    <button type="submit" class="btn"><i class="fas fa-paper-plane"></i></button>
+                </form>
             </div>
         </div>
 
-        <!-- Profile Section -->
+        <!-- Profile -->
         <div id="profile" class="section">
             <div class="card">
-                <h3><i class="fas fa-id-card"></i> زانیاریێن پرۆفایلێ</h3>
-                <div class="input-group">
-                    <label>ئیمەیڵ</label>
-                    <input type="text" id="profileEmail" disabled>
-                </div>
-                <div class="input-group">
-                    <label>ناڤێ تە (Full Name)</label>
-                    <input type="text" id="profileDisplayName" placeholder="ناڤێ خۆ بنووسە">
-                </div>
-                <button id="saveProfileBtn" class="btn">بگەهینە (Save)</button>
+                <h3><i class="fas fa-id-card"></i> زانیاریێن کەسی</h3>
+                <label>ئیمەیڵ</label><input type="text" id="profileEmail" disabled style="margin-bottom: 15px;">
+                <label>ناڤێ تە</label><input type="text" id="profileDisplayName" style="margin-bottom: 15px;">
+                <button id="saveProfileBtn" class="btn">پاشکەفتن (Save)</button>
             </div>
-
             <div class="card">
-                <h3>گوهۆڕینا پەیڤا نهێنی (Password)</h3>
-                <p style="margin-bottom: 10px; font-size: 0.9rem;">بۆ گوهۆڕینا وشەی نهێنی، لینکەک دێ بۆ ئیمەیڵا تە هێتە ناردن.</p>
+                <h3>گوهۆڕینا وشەی نهێنی</h3>
                 <button id="changePassBtn" class="btn" style="background: var(--sidebar);">ناردنا لینکا گوهۆڕینێ</button>
             </div>
         </div>
-
     </div>
 
-    <!-- Firebase Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBoCQo1yrieelrzAkIzNgegkv0w0sQvjho",
@@ -159,102 +130,96 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Sidebar Navigation
-        window.showSection = (sectionId) => {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        };
-
-        // Auth State Check
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('profileEmail').value = user.email;
                 document.getElementById('profileDisplayName').value = user.displayName || "";
-                loadPredictions(); // گشتگیر هاتە کرن بۆ هەموو مروڤان
-            } else {
-                window.location.href = "index.html";
-            }
+                loadPredictions();
+                loadChat();
+            } else { window.location.href = "index.html"; }
         });
 
-        // Save Profile
+        // Navigation
+        window.showSection = (id) => {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.currentTarget.classList.add('active');
+            if (id === 'chat') { scrollChat(); }
+        };
+
+        // PROFILE LOGIC
         document.getElementById('saveProfileBtn').addEventListener('click', () => {
-            const name = document.getElementById('profileDisplayName').value;
-            updateProfile(auth.currentUser, { displayName: name })
-                .then(() => alert("پرۆفایل هاتە نووژەنکرن!"))
-                .catch(err => alert(err.message));
+            updateProfile(auth.currentUser, { displayName: document.getElementById('profileDisplayName').value })
+                .then(() => alert("نووژەن بوو!")).catch(err => alert(err.message));
         });
-
-        // Change Password
         document.getElementById('changePassBtn').addEventListener('click', () => {
-            sendPasswordResetEmail(auth, auth.currentUser.email)
-                .then(() => alert("لینکا گوهۆڕینێ بۆ ئیمەیڵا تە هاتە ناردن."))
-                .catch(err => alert(err.message));
+            sendPasswordResetEmail(auth, auth.currentUser.email).then(() => alert("لینک هاتە ناردن.")).catch(err => alert(err.message));
         });
 
-        // Prediction Logic (SAVE)
+        // PREDICTION LOGIC
         const predictionForm = document.getElementById('predictionForm');
         predictionForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const match = document.getElementById('matchName').value;
-            const score = document.getElementById('predictedScore').value;
-            const userName = auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
-
-            try {
-                await addDoc(collection(db, "predictions"), {
-                    userId: auth.currentUser.uid,
-                    userName: userName,
-                    match: match,
-                    score: score,
-                    date: new Date().toISOString()
-                });
-                alert("پشتبینی هاتە پاشکەفتکرن!");
-                predictionForm.reset();
-                loadPredictions();
-            } catch (error) {
-                alert("کێشەیەک ل داتا بەیسێ هەیە: " + error.message);
-            }
+            await addDoc(collection(db, "predictions"), {
+                userId: auth.currentUser.uid,
+                userName: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
+                match: document.getElementById('matchName').value,
+                score: document.getElementById('predictedScore').value,
+                date: new Date().toISOString()
+            });
+            predictionForm.reset();
+            loadPredictions();
         });
 
-        // Load Predictions (FETCH ALL & STYLE)
         async function loadPredictions() {
-            const q = query(collection(db, "predictions")); // Query ALL users
-            const querySnapshot = await getDocs(q);
+            const q = query(collection(db, "predictions"), orderBy("date", "desc"));
+            const snap = await getDocs(q);
             const list = document.getElementById('predictionList');
-            list.innerHTML = "";
-            
-            if (querySnapshot.empty) {
-                list.innerHTML = "<p style='color: grey;'>چ پێشبینی نینن...</p>";
-                return;
-            }
-
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const postDate = new Date(data.date).toLocaleDateString();
-                
-                list.innerHTML += `
-                    <div style="background: var(--bg); border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 8px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 8px;">
-                            <span style="font-weight: bold; color: var(--accent);"><i class="fas fa-user-circle"></i> ${data.userName}</span>
-                            <span style="font-size: 0.75rem; color: grey;">${postDate}</span>
-                        </div>
-                        <div style="font-size: 1.1rem; color: var(--sidebar); font-weight: 700;">
-                            ${data.match}
-                        </div>
-                        <div style="background: white; display: inline-block; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 1.2rem; color: var(--accent); width: fit-content; border: 2px solid var(--accent);">
-                            ${data.score}
-                        </div>
-                    </div>
-                `;
+            list.innerHTML = "<h3>هەموو پێشبینی</h3>";
+            snap.forEach(doc => {
+                const d = doc.data();
+                list.innerHTML += `<div class="card" style="padding:15px; margin-bottom:10px;">
+                    <small><b>${d.userName}</b> - ${new Date(d.date).toLocaleDateString()}</small><br>
+                    <strong>${d.match}</strong>: <span style="color:var(--accent)">${d.score}</span>
+                </div>`;
             });
         }
 
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => window.location.href = "index.html");
+        // CHAT LOGIC (Real-time)
+        const chatForm = document.getElementById('chatForm');
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = document.getElementById('chatInput').value;
+            if (!text.trim()) return;
+            await addDoc(collection(db, "messages"), {
+                userId: auth.currentUser.uid,
+                userName: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
+                text: text,
+                timestamp: new Date().getTime()
+            });
+            chatForm.reset();
         });
 
+        function loadChat() {
+            const q = query(collection(db, "messages"), orderBy("timestamp", "asc"), limit(50));
+            onSnapshot(q, (snap) => {
+                const box = document.getElementById('chatBox');
+                box.innerHTML = "";
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    const isMe = d.userId === auth.currentUser.uid;
+                    box.innerHTML += `<div class="msg ${isMe ? 'msg-me' : 'msg-other'}">
+                        <span class="msg-user">${d.userName}</span>
+                        ${d.text}
+                    </div>`;
+                });
+                scrollChat();
+            });
+        }
+        function scrollChat() { const box = document.getElementById('chatBox'); box.scrollTop = box.scrollHeight; }
+
+        document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
     </script>
 </body>
 </html>
