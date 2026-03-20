@@ -384,6 +384,7 @@
         <div class="nav-item active" onclick="showSection('predictions')"><i class="fas fa-chart-line"></i> پێشبینی
         </div>
         <div class="nav-item" onclick="showSection('chat')"><i class="fas fa-comments"></i> جیهانا چاتێ</div>
+        <div class="nav-item" onclick="showSection('support')"><i class="fas fa-headset"></i> پشتیوانی</div>
         <div class="nav-item" onclick="showSection('profile')"><i class="fas fa-user"></i> پرۆفایل</div>
     </div>
 
@@ -434,6 +435,21 @@
                     لینکا گوهۆڕینێ</button>
                 <hr style="opacity: 0.1; margin-bottom: 20px;">
                 <button id="logoutBtn" class="btn" style="background-color: #c0392b;">چوونەدەر (Log Out)</button>
+            </div>
+        </div>
+
+        <!-- Support Section -->
+        <div id="support" class="section">
+            <div class="card">
+                <h3><i class="fas fa-envelope"></i> نامەیەک بۆ مە بنێرە</h3>
+                <p style="margin-bottom: 15px; color: #666;">ئەگەر کێشەیەک یان و پێشنیارەکت هەیە، بۆمان بنێرە.</p>
+                <form id="supportForm">
+                    <label>سەردێڕ (Subject)</label>
+                    <input type="text" id="supportSubject" placeholder="بابەت..." required style="margin-bottom: 15px;">
+                    <label>نامە (Message)</label>
+                    <textarea id="supportMessage" rows="5" placeholder="نامەکەت لێرە بنووسە..." required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; outline: none;"></textarea>
+                    <button type="submit" class="btn" style="margin-top: 15px; width: 100%;">ناردنی نامە</button>
+                </form>
             </div>
         </div>
     </div>
@@ -557,6 +573,15 @@
             });
         }
         function scrollChat() { const box = document.getElementById('chatBox'); box.scrollTop = box.scrollHeight; }
+
+        // Support Logic
+        document.getElementById('supportForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const sub = document.getElementById('supportSubject').value;
+            const msg = document.getElementById('supportMessage').value;
+            const myEmail = "iamshvan@gmail.com"; // لێرە ئیمەیڵی خۆت بنووسە
+            window.location.href = `mailto:${myEmail}?subject=${sub}&body=${msg}`;
+        });
 
         document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
     </script>
