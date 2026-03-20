@@ -45,6 +45,18 @@
 
   <!-- CSS File -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Google reCAPTCHA Enterprise -->
+  <script src="https://www.google.com/recaptcha/enterprise.js?render=6LdenJAsAAAAAMUaD6dhzTT-H6pnWclvcY554Qpa"></script>
+  <script>
+    function onSubmit(token) {
+        // Find the visible/active form and submit it
+        const activeForm = document.querySelector('.form-content.active-form form');
+        if (activeForm) {
+            activeForm.requestSubmit();
+        }
+    }
+  </script>
 </head>
 
 <body>
@@ -90,7 +102,10 @@
             <input type="password" name="password" id="confirmPass" placeholder="••••••••" required />
           </div>
 
-          <button type="submit" class="submit-btn">sign up</button>
+          <button type="submit" class="submit-btn g-recaptcha"
+            data-sitekey="6LdenJAsAAAAAMUaD6dhzTT-H6pnWclvcY554Qpa"
+            data-callback='onSubmit'
+            data-action='submit'>sign up</button>
 
           <div class="google">
             <p>or</p>
@@ -124,7 +139,10 @@
 
           <a href="#" id="forgotPass" class="forgot-pass">Forgot password?</a>
 
-          <button type="submit" class="submit-btn">login</button>
+          <button type="submit" class="submit-btn g-recaptcha"
+            data-sitekey="6LdenJAsAAAAAMUaD6dhzTT-H6pnWclvcY554Qpa"
+            data-callback='onSubmit'
+            data-action='submit'>login</button>
 
           <div class="google">
             <p>or</p>

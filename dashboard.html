@@ -20,6 +20,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- Google reCAPTCHA Enterprise -->
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LdenJAsAAAAAMUaD6dhzTT-H6pnWclvcY554Qpa"></script>
+    <script>
+      function onSubmit(token) {
+          // Find the visible form in the active section and submit it
+          const activeSec = document.querySelector('.section.active');
+          if (activeSec) {
+              const activeForm = activeSec.querySelector('form');
+              if (activeForm) {
+                  activeForm.requestSubmit();
+              }
+          }
+      }
+    </script>
     <style>
         :root {
             --bg: #f8f9fa;
@@ -398,7 +413,10 @@
                         style="margin-bottom: 10px;">
                     <input type="text" id="predictedScore" placeholder="ئەنجام: 2 - 1" required
                         style="margin-bottom: 10px;">
-                    <button type="submit" class="btn">بلاڤ بکە</button>
+                    <button type="submit" class="btn g-recaptcha"
+                        data-sitekey="6LdenJAsAAAAAMUaD6dhzTT-H6pnWclvcY554Qpa"
+                        data-callback='onSubmit'
+                        data-action='submit'>بلاڤ بکە</button>
                 </form>
             </div>
             <div id="predictionList">
@@ -448,7 +466,11 @@
                     <input type="text" id="supportSubject" placeholder="بابەتێ نامێ بنووسە..." required style="margin-bottom: 15px;">
                     <label>نامە (Message)</label>
                     <textarea id="supportMessage" rows="5" placeholder="ناما خۆ ل لێرە بنووسە..." required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; outline: none;"></textarea>
-                    <button type="submit" class="btn" style="margin-top: 15px; width: 100%;">فرێکرنا نامێ</button>
+                    <button type="submit" class="btn g-recaptcha"
+                        data-sitekey="6LdenJAsAAAAAMUaD6dhzTT-H6pnWclvcY554Qpa"
+                        data-callback='onSubmit'
+                        data-action='submit'
+                        style="margin-top: 15px; width: 100%;">فرێکرنا نامێ</button>
                 </form>
             </div>
         </div>
